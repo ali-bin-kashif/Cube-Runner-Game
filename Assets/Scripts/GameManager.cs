@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     //Variables for score and it's, increment variable's value will increase with time
     public float Score;
-    float scoreIncrement = 0.05f;
+    float scoreIncrement = 0.4f;
 
     //Game platform spawn script
     PlatformSpawnScript platformSpawner;
