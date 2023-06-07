@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SocialPlatforms;
 
 public class PlayerMovement : MonoBehaviour
@@ -56,9 +57,13 @@ public class PlayerMovement : MonoBehaviour
             playerBody.velocity = new Vector3(movementInput * MovingSensitivity, playerBody.velocity.y, ForwardSpeed);
 
             //Jump and ground check
-            if (Input.GetMouseButtonDown(0) && (!isJumping || Fuel > 0))
+            if (Input.GetMouseButtonDown(0) && (!isJumping || Fuel > 0) && !EventSystem.current.IsPointerOverGameObject())
             {
-                
+                /*if(EventSystem.current.IsPointerOverGameObject())
+                {
+                    return;
+                }*/
+
                 playerBody.AddForce(new Vector3(0, JumpForce, 0), ForceMode.Impulse);
                 cubeAnimation.SetTrigger("Jump");
 
@@ -130,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator Explode()
     {
         isAlive = false;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.07f);
         int cubePerAxis = 4;
         for (int x = 0; x < cubePerAxis; x++)
         {

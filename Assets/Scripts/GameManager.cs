@@ -44,6 +44,9 @@ public class GameManager : MonoBehaviour
 
         //Setting Main Menu camera movement animation
         Player.CameraMovements.SetBool("InMainMenu", inMainMenu);
+
+        //Set time scale to 1, in case if the game is paused and returned to main menu
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
