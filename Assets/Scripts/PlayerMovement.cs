@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
 
     int jumpsCount;
 
-    public bool isAlive;
+    public bool isAlive , isDead;
 
 
     // Start is called before the first frame update
@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(Fuel);
+        //Debug.Log(Fuel);
         movementInput = Input.GetAxis("Horizontal");
 
         //Use Mobile Accelerometer for right and left movement i.e tilt
@@ -59,11 +59,7 @@ public class PlayerMovement : MonoBehaviour
             //Jump and ground check
             if (Input.GetMouseButtonDown(0) && (!isJumping || Fuel > 0) && !EventSystem.current.IsPointerOverGameObject())
             {
-                /*if(EventSystem.current.IsPointerOverGameObject())
-                {
-                    return;
-                }*/
-
+          
                 playerBody.AddForce(new Vector3(0, JumpForce, 0), ForceMode.Impulse);
                 cubeAnimation.SetTrigger("Jump");
 
@@ -107,8 +103,7 @@ public class PlayerMovement : MonoBehaviour
         if(collision.gameObject.CompareTag("Obstacle"))
         {
             CameraMovements.SetTrigger("Death");
-            StartCoroutine(Explode());
-            
+            StartCoroutine(Explode()); 
         }
 
     }
@@ -130,11 +125,18 @@ public class PlayerMovement : MonoBehaviour
             Destroy(other.gameObject);
             Fuel++;
         }
+
+        if(other.gameObject.CompareTag("Void"))
+        {
+            CameraMovements.SetTrigger("Death");
+            StartCoroutine(Explode());
+        }
     }
 
     IEnumerator Explode()
     {
         isAlive = false;
+        isDead = true;
         yield return new WaitForSeconds(0.07f);
         int cubePerAxis = 4;
         for (int x = 0; x < cubePerAxis; x++)

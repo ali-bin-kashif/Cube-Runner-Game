@@ -15,6 +15,17 @@ public class GameUI : MonoBehaviour
     public GameObject MainMenuPanel;
     public GameObject PausePanel;
 
+    public GameObject GameOverPanel;
+    public TextMeshProUGUI endScore, endCoins;
+
+    public GameObject QuickTipPanel;
+    public TextMeshProUGUI QuickTipsText;
+    [SerializeField]
+    string[] quickTips;
+    
+
+    bool hasRun;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +33,9 @@ public class GameUI : MonoBehaviour
         MainMenuPanel.SetActive(true);
         PausePanel.SetActive(false);
         GamePlayPanel.SetActive(false);
+        GameOverPanel.SetActive(false);
+
+        QuickTipsText.text = quickTips[Random.Range(0, quickTips.Length)];
     }
 
     // Update is called once per frame
@@ -30,6 +44,12 @@ public class GameUI : MonoBehaviour
         ScoreDisplay.text = "" + Mathf.RoundToInt(gameplayManager.Score);
         CoinsHUD.text = gameplayManager.Player.Coins.ToString();
         FuelBar.value = gameplayManager.Player.Fuel;
+
+        if(gameplayManager.gameOver && !hasRun)
+        {
+            hasRun = true;
+            StartCoroutine(GameOver());
+        }
     }
 
     public void PauseButton()
@@ -37,6 +57,7 @@ public class GameUI : MonoBehaviour
         Time.timeScale = 0;
         PausePanel.SetActive(true);
         GamePlayPanel.SetActive(false);
+        QuickTipPanel.SetActive(false);
 
     }
 
@@ -60,5 +81,19 @@ public class GameUI : MonoBehaviour
         MainMenuPanel.SetActive(false);
         GamePlayPanel.SetActive(true);
         StartCoroutine(gameplayManager.StartGame());
+    }
+
+    public IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(3f);
+
+        GamePlayPanel.SetActive(false);
+        GameOverPanel.SetActive(true);
+
+        endScore.text = "" + Mathf.RoundToInt(gameplayManager.Score);
+        endCoins.text = "" + gameplayManager.Player.Coins;
+
+
+
     }
 }

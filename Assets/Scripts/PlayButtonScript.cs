@@ -15,7 +15,6 @@ public class PlayButtonScript : MonoBehaviour
     {
         playButton = GetComponent<Animator>();
         collider = GetComponent<MeshCollider>();
-        
     }
 
     private void OnMouseUpAsButton()

@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     //Variables for score and it's, increment variable's value will increase with time
     public float Score;
-    float scoreIncrement = 0.4f;
+    float scoreIncrement = 0.3f;
 
     //Game platform spawn script
     PlatformSpawnScript platformSpawner;
@@ -28,7 +28,9 @@ public class GameManager : MonoBehaviour
 
     DifficulyLevel levelState;
 
-    bool gameStarted ,inMainMenu;
+    bool gameStarted, inMainMenu ,hasRun;
+
+    public bool gameOver;
 
     // Start is called before the first frame update
     void Start()
@@ -52,15 +54,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if(inMainMenu & !gameStarted)
-        {
-            Player.transform.Rotate(Vector3.up * 10f * Time.deltaTime, Space.World);
-        }*/
+        
         //Only execute when the player is alive and game has started(i.e after play button)
         if(gameStarted && Player.isAlive)
         {
             
-
             timeElapsed += Time.deltaTime; //Incrementing time elapsed with delta time
             Score += scoreIncrement;    //Incrementing score with score increment
 
@@ -86,8 +84,8 @@ public class GameManager : MonoBehaviour
                 levelState = DifficulyLevel.Medium;
             }
 
-            //Set Difficulty State to Hard after 120 Platforms and add start spawning hard planes also
-            if (platformSpawner.PlatformCount > 120 && levelState == DifficulyLevel.Medium)
+            //Set Difficulty State to Hard after 100 Platforms and add start spawning hard planes also
+            if (platformSpawner.PlatformCount > 100 && levelState == DifficulyLevel.Medium)
             {
                 platformSpawner.AddHardPlanes();
                 levelState = DifficulyLevel.Hard;
@@ -95,9 +93,11 @@ public class GameManager : MonoBehaviour
         }
 
         //Set gamestarted to false after player die
-        if(!Player.isAlive)
+        if(Player.isDead && !hasRun)
         {
             gameStarted = false;
+            gameOver = true;
+            hasRun = true;
         }
         
     }
@@ -115,8 +115,6 @@ public class GameManager : MonoBehaviour
         //Start Gameplay camera movement animations
         Player.CameraMovements.SetTrigger("GameStarted");
 
-        
-
         yield return new WaitForSeconds(1f);
 
         Player.transform.rotation = new Quaternion { x = 0, y = 0, z = 0, w = 0 };
@@ -125,10 +123,7 @@ public class GameManager : MonoBehaviour
         gameStarted = true;
 
         //Player is alive now
-        Player.isAlive = true;
-
-        
-
+        Player.isAlive = true; 
          
     }
 }
